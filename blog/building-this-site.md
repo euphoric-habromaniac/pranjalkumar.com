@@ -395,7 +395,7 @@ personal-website/
 
 ---
 
-If you're reading this, you found the blog. Feel free to poke around the source code, open the terminal (`>_ terminal` in the nav, or hit the button), or drop me a line at `contact@pranjalkumar.com`.
+If you're reading this, you found the blog. Feel free to poke around the [architecture docs and design system](https://github.com/euphoric-habromaniac/pranjalkumar.com), open the terminal (`>_ terminal` in the nav, or hit the button), or drop me a line at `contact@pranjalkumar.com`.
 
 ---
 

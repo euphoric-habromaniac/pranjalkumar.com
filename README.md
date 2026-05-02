@@ -1,21 +1,15 @@
-<p align="center">
-  <img src="assets/logo-mark.svg" width="78" height="93" alt="P logo mark" />
-</p>
+![P logo mark](assets/logo-mark.svg)
 
-<h1 align="center">pranjalkumar.com</h1>
+# pranjalkumar.com
 
-<p align="center">
-  <strong>Personal portfolio — built from scratch.</strong><br/>
-  React 19 · TypeScript · Vite · Zero UI Libraries · Terminal-First
-</p>
+**Personal portfolio — built from scratch.**
+React 19 · TypeScript · Vite · Zero UI Libraries · Terminal-First
 
-<p align="center">
-  <a href="https://pranjalkumar.com"><img src="https://img.shields.io/badge/live-pranjalkumar.com-a8d8c8?style=flat-square" alt="Live Site" /></a>
-  <a href="https://pranjalkumar.com/design"><img src="https://img.shields.io/badge/design_system-live-c4b5e8?style=flat-square" alt="Design System" /></a>
-  <img src="https://img.shields.io/badge/react-19.2-61dafb?style=flat-square" alt="React 19" />
-  <img src="https://img.shields.io/badge/typescript-5.8-3178c6?style=flat-square" alt="TypeScript" />
-  <img src="https://img.shields.io/badge/vite-6.2-646cff?style=flat-square" alt="Vite" />
-</p>
+[![Live Site](https://img.shields.io/badge/live-pranjalkumar.com-a8d8c8?style=flat-square)](https://pranjalkumar.com)
+[![Design System](https://img.shields.io/badge/design_system-live-c4b5e8?style=flat-square)](https://pranjalkumar.com/design)
+![React 19](https://img.shields.io/badge/react-19.2-61dafb?style=flat-square)
+![TypeScript](https://img.shields.io/badge/typescript-5.8-3178c6?style=flat-square)
+![Vite](https://img.shields.io/badge/vite-6.2-646cff?style=flat-square)
 
 ---
 
@@ -313,6 +307,5 @@ Both adapt to dark/light themes via CSS custom properties: `--logo-glyph`, `--lo
 
 ---
 
-<p align="center">
-  <em>1st year CSE student. Backend engineer. Security researcher.<br/>I build systems and find the holes in them.</em>
-</p>
+*1st year CSE student. Backend engineer. Security researcher.*  
+*I build systems and find the holes in them.*

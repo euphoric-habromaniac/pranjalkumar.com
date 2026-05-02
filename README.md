@@ -116,6 +116,8 @@ The `@react-pdf/renderer` package (~400KB) is additionally split into a separate
 | [**Animation System**](architecture/animation-system.md) | 25+ Framer Motion variants, easing curve philosophy, IntersectionObserver scroll-reveal |
 | [**Resume Engine**](architecture/resume-engine.md) | Client-side PDF generation, lazy-loading, single-source-of-truth data pattern |
 | [**Security Hardening**](architecture/security-hardening.md) | CSP headers, README XSS vulnerability, DOMPurify, API timeouts, header audit |
+| [**Adaptive Navigation**](#adaptive-navigation-system) | CSS Container Queries, interactive drawer, focus trapping, horizontal scroll snapping |
+
 
 ---
 
@@ -176,6 +178,17 @@ This is a static site. There's still plenty to secure.
 - **Link safety** — All `target="_blank"` links use `rel="noopener noreferrer"`.
 
 Full technical breakdown: [**Security Hardening Deep-Dive**](architecture/security-hardening.md)
+
+---
+
+## Adaptive Navigation System
+
+The site uses a "content-aware" responsive strategy rather than rigid device-based breakpoints.
+
+- **CSS Container Queries** — The navbar uses `@container navbar (max-width: ...)` to monitor its available layout space, enabling it to adapt correctly in split-screen windows or vertical monitors.
+- **Interactive Drawer** — A custom-built mobile menu using `framer-motion` for smooth, spring-animated transitions.
+- **Production-Grade A11y** — Implements a strict **Focus Trap** (keeping keyboard focus within the drawer), **Focus Return** (returning focus to the toggle on close), and **Body Scroll Locking**.
+- **Scroll Snapping** — Dense navigation sections (like the 10 `/design` links) use horizontal scroll snapping to group items neatly on tablets.
 
 ---
 
@@ -287,9 +300,8 @@ public/
 
 ## Blog
 
-The full technical blog post documenting the build process is available at [`/blog/building-this-site`](https://pranjalkumar.com/blog/building-this-site) and in this repo:
-
-→ [**How I built this site from scratch**](blog/building-this-site.md)
+The full technical blog post documenting the build process is available at:
+👉 [**How I built this site from scratch**](https://pranjalkumar.com/blog/building-this-site)
 
 ---
 

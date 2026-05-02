@@ -1,0 +1,9 @@
+<svg width="78" height="93" viewBox="0 0 78 93" xmlns="http://www.w3.org/2000/svg" aria-label="pranjal. logo mark">
+  <path d="M 18 70 L 18 14 L 46 14 Q 64 14 64 33 Q 64 52 46 52 L 30 52 L 30 70 Z
+           M 30 16 L 45 16 Q 59 16 59 33 Q 59 50 45 50 L 30 50 Z"
+        fill="#f0eee8" fill-rule="evenodd"/>
+  <line x1="10" y1="70" x2="38" y2="70" stroke="#f0eee8" stroke-width="1.5"/>
+  <line x1="10" y1="14" x2="22" y2="14" stroke="#f0eee8" stroke-width="1.5"/>
+  <circle cx="41" cy="82" r="5.5" fill="#c4b5e8"/>
+</svg>
+

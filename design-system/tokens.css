@@ -1,0 +1,181 @@
+/* ─────────────────────────────────────────────
+   Pranjal Kumar, Portfolio Design Tokens
+   Dark + Light themes via [data-theme] on <html>
+   ───────────────────────────────────────────── */
+
+:root,
+:root[data-theme="dark"] {
+  /* Surfaces */
+  --bg: #111113;
+  --bg-deep: #0a0a0c;
+  --surface: #1a1a1f;
+  --surface-2: #202027;
+  --border: rgba(255, 255, 255, 0.07);
+  --border-strong: rgba(255, 255, 255, 0.14);
+
+  /* Accents */
+  --mint:     #a8d8c8;
+  --lavender: #c4b5e8;
+  --peach:    #f4b8a4;
+  --sky:      #9ec8e8;
+
+  /* Logo system */
+  --logo-dot:            #c4b5e8;
+  --logo-dot-on-light:   #534ab7;
+  --logo-glyph:          #f0eee8;
+  --logo-glyph-on-light: #111113;
+  --logo-divider:        rgba(255,255,255,0.10);
+
+  /* Text */
+  --text:       #f0eee8;
+  --text-muted: #8a8a8f;
+
+  /* Tag fills (pre-mixed so light theme can override) */
+  --tag-peach-bg:    rgba(244, 184, 164, 0.08);
+  --tag-peach-bd:    rgba(244, 184, 164, 0.22);
+  --tag-sky-bg:      rgba(158, 200, 232, 0.08);
+  --tag-sky-bd:      rgba(158, 200, 232, 0.22);
+  --tag-mint-bg:     rgba(168, 216, 200, 0.06);
+
+  /* Semantic */
+  --link:       var(--mint);
+  --focus-ring: var(--mint);
+  --pulse:      #7ec9a8;
+
+  /* Type */
+  --font-display: 'Cormorant Garamond', 'Times New Roman', serif;
+  --font-body:    'Plus Jakarta Sans', -apple-system, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+
+  --fs-hero: clamp(56px, 9vw, 132px);
+  --fs-h1:   clamp(40px, 5vw, 72px);
+  --fs-h2:   clamp(32px, 3.5vw, 48px);
+  --fs-h3:   28px;
+  --fs-lg:   20px;
+  --fs-md:   16px;
+  --fs-sm:   14px;
+  --fs-xs:   12px;
+
+  --lh-display: 1.1;
+  --lh-body:    1.7;
+
+  /* Spacing */
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px; --sp-5: 20px;
+  --sp-6: 24px; --sp-8: 32px; --sp-10: 40px; --sp-12: 48px;
+  --sp-16: 64px; --sp-20: 80px; --sp-24: 96px;
+
+  /* Radii */
+  --r-sm: 4px; --r-md: 8px; --r-lg: 14px; --r-pill: 999px;
+
+  /* Motion */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out:   cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 160ms; --dur-med:  280ms; --dur-slow: 400ms;
+
+  /* Layout */
+  --container: 1200px;
+  --gutter: 32px;
+}
+
+/* Light theme — warm cream paper, deep ink */
+:root[data-theme="light"] {
+  --bg: #faf7f0;
+  --bg-deep: #f1ede2;
+  --surface: #ffffff;
+  --surface-2: #f4f0e6;
+  --border: rgba(24, 22, 30, 0.10);
+  --border-strong: rgba(24, 22, 30, 0.22);
+
+  /* Accents tuned for AA on cream */
+  --mint:     #1f7a5e;
+  --lavender: #5a44a8;
+  --peach:    #b3553a;
+  --sky:      #2a6a98;
+
+  --text:       #18161e;
+  --text-muted: #5e5b66;
+
+  --tag-peach-bg:  rgba(179, 85, 58, 0.07);
+  --tag-peach-bd:  rgba(179, 85, 58, 0.30);
+  --tag-sky-bg:    rgba(42, 106, 152, 0.06);
+  --tag-sky-bd:    rgba(42, 106, 152, 0.28);
+  --tag-mint-bg:   rgba(31, 122, 94, 0.07);
+
+  --pulse: #1f7a5e;
+
+  --logo-dot:    #534ab7;
+  --logo-glyph:  #111113;
+  --logo-divider: rgba(0,0,0,0.10);
+}
+
+html[data-theme="light"] ::selection { background: var(--mint); color: #fff; }
+
+/* Theme transition */
+html, body, .nav, .surface, .project-card, .xp-card,
+.proof-pill, .skill-tag, .tag-peach, .tag-sky,
+.terminal, .terminal-bar, .terminal-input-row, .footer {
+  transition: background-color var(--dur-med) var(--ease-out-expo),
+              color var(--dur-med) var(--ease-out-expo),
+              border-color var(--dur-med) var(--ease-out-expo);
+}
+
+/* Base */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--fs-md);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body { min-height: 100vh; overflow-x: hidden; }
+
+a { color: var(--link); text-decoration: none; }
+button { font-family: inherit; cursor: pointer; }
+
+::selection { background: var(--mint); color: var(--bg); }
+
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: var(--lh-display);
+  letter-spacing: -0.01em;
+}
+.mono { font-family: var(--font-mono); }
+.label-sc {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--lavender);
+}
+
+.container {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+@media (max-width: 700px) { :root { --gutter: 20px; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+

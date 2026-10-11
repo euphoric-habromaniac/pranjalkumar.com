@@ -1,12 +1,12 @@
 # Animation System
 
-> Framer Motion variant library, easing curve philosophy, IntersectionObserver scroll-reveal, and the full motion spec.
+> The minimal motion layer, easing curve philosophy, IntersectionObserver scroll-reveal, and the performance budget.
 
 ---
 
 ## Philosophy
 
-Two easing curves define the site's motion personality:
+Two easing curves set how everything on the site moves:
 
 ```typescript
 // "Editorial" — sharp entrance, slow settle. Used for content reveals.
@@ -16,70 +16,39 @@ const EASE_EDITORIAL: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const EASE_SNAPPY: [number, number, number, number] = [0.16, 1, 0.3, 1];
 ```
 
-**Editorial** feels deliberate and considered — like a magazine page turn. It's used for scroll-reveal animations, section entrances, and line draws.
+**Editorial** feels deliberate, like a magazine page turn. It's used for scroll reveals, section entrances and line draws.
 
-**Snappy** feels responsive and alive — like tapping a physical button. It's used for scale effects, pop-ins, and user-triggered interactions.
+**Snappy** feels quick, like tapping a physical button. It's used for scale effects, pop-ins and anything the user triggers.
 
-Every animation in the library uses one of these two curves. No ad-hoc `ease` or `ease-in-out` anywhere. This creates unconscious visual consistency.
+Motion uses these curves rather than ad-hoc `ease` or `ease-in-out`, which keeps the feel consistent.
+
+The overall rule: quiet from a distance, detailed up close. Nothing decorative moves while the page is at rest. Details appear when something happens: a scroll, a section coming into view, a hover.
 
 ---
 
-## Variant library
+## The detail layer
 
-The animation system is a library of **25+ Framer Motion variant presets**, all defined in `animations/micro.ts`. Every variant follows the `hidden → visible` pattern for use with Framer Motion's `initial`, `animate`, and `whileInView` props.
+An earlier build had a much louder motion set: a text-scramble effect on headings, an animated astrolabe in the hero, and equation dividers between sections. They were removed, along with a large Framer Motion variant library. What remains lives in `components/motion/`:
 
-### Entrance animations
+| Detail | Trigger | Cost |
+|---|---|---|
+| Scroll hairline | A 1px line across the top of the page, scaled by scroll position | One passive scroll listener, at most one update per frame |
+| Reveal fades | Small fade-ups as elements enter the viewport | `IntersectionObserver`, once per element |
+| Section labels | A faint numbered label fades in once when a section appears | `IntersectionObserver` plus a CSS transition |
+| Cursor ring | Follows a real mouse pointer | Fine pointers only, never on touch |
+| Project card details | Crop marks and a faint grid spotlight on hover | Only while the pointer is over a card |
 
-| Variant | Effect | Duration | Easing |
-|---|---|---|---|
-| `FADE_UP_BOUNCE` | Fade + translateY(40px) + overshoot | 800ms | `[0.34, 1.56, 0.64, 1]` (bounce) |
-| `SLIDE_LEFT` | Fade + translateX(-60px) | 700ms | Editorial |
-| `SLIDE_RIGHT` | Fade + translateX(60px) | 700ms | Editorial |
-| `SLIDE_UP_FADE` | Fade + translateY(60px) | 800ms | Editorial |
-| `FADE_DOWN` | Fade + translateY(-30px) | 600ms | Editorial |
-| `SCALE_UP` | Fade + scale(0.8) | 600ms | Snappy |
-| `SCALE_ROTATE` | Fade + scale(0.6) + rotate(-10°) | 700ms | Bounce |
-| `BLUR_IN` | Fade + blur(10px) | 800ms | Editorial |
-| `ZOOM_BLUR` | Fade + scale(1.2) + blur(8px) | 800ms | Editorial |
-| `FLIP_IN` | Fade + rotateX(90°) | 800ms | Editorial |
-| `TILT_IN` | Fade + rotateY(-20°) + translateX(-30px) | 700ms | Editorial |
-| `SKEW_IN` | Fade + skewX(-10°) + translateX(-30px) | 600ms | Editorial |
+Framer Motion is still used for a few interface transitions: the mobile drawer, route changes, the back-to-top button and the terminal overlay.
 
-### Spring animations
+### Performance budget
 
-| Variant | Stiffness | Damping | Effect |
-|---|---|---|---|
-| `POP_IN` | 400 | 15 | Scale from 0 with spring |
-| `ELASTIC_SCALE` | 300 | 10 | Scale from 0.5 with bounce |
-| `BOUNCE_UP` | 150 | 12 | translateY(100px) with spring |
-| `SWING_IN` | 200 | 15 | Rotate(15°) with spring |
-| `WAVE_ITEM` | 200 | 12 | translateY(30px) + rotate(-5°) with spring |
+The site has to run on slow machines, so the layer sticks to three rules:
 
-### Stagger containers
+- no canvases and no always-on JavaScript loops
+- continuous motion animates only `transform` and `opacity`, and pauses off screen
+- everything else is static CSS, or fires once on an event
 
-| Container | Item Variant | Stagger delay | Child delay |
-|---|---|---|---|
-| `STAGGER_SCALE` | `STAGGER_SCALE_ITEM` | 80ms | 100ms |
-| `WAVE_STAGGER` | `WAVE_ITEM` | 60ms | 200ms |
-| `TYPEWRITER` | `TYPEWRITER_CHAR` | 50ms | — |
-
-### Continuous animations
-
-| Variant | Effect | Duration | Loop |
-|---|---|---|---|
-| `MICRO_PULSE` | Opacity 0.5 → 1 → 0.5 | 2s | Infinite |
-| `GLOW_PULSE` | Same as MICRO_PULSE | 2s | Infinite |
-| `FLOAT` | translateY(-5px → 5px → -5px) | 3s | Infinite |
-
-### Structural animations
-
-| Variant | Effect |
-|---|---|
-| `LINE_DRAW` | scaleX(0 → 1), origin left. For horizontal dividers. |
-| `BORDER_EXPAND` | scaleX(0 → 1). For border reveals. |
-| `MORPH` | borderRadius(50% → 8px) + scale(0.5 → 1). Shape morphing. |
-| `CHAR_REVEAL` | Per-character fade+translateY with staggered delay (30ms/char). |
-| `COUNT_UP` | Fade + translateY for number counters. |
+All of it is scoped under one class on `<html>`. A switch in the footer turns the whole layer off and remembers the choice.
 
 ---
 
@@ -120,7 +89,7 @@ Some animations bypass Framer Motion and use pure CSS for performance:
 
 | Animation | Duration | Easing | Usage |
 |---|---|---|---|
-| Status pulse | 2400ms, infinite | ease-out | Hero availability indicator |
+| Status pulse | 2400ms, infinite | ease-out | Hero status indicator |
 | Terminal caret | 1100ms, steps(2), infinite | step | Blinking cursor |
 | Reveal transitions | 700ms | `cubic-bezier(0.22, 1, 0.36, 1)` | Scroll-reveal elements |
 

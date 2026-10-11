@@ -10,7 +10,7 @@ All visual styling is driven by **CSS Custom Properties** (design tokens) define
 
 ### The single-source-of-truth rule
 
-`index.css` is the **only** stylesheet imported by the application. This was a hard-won lesson.
+`index.css` is the **only** stylesheet imported by the application. I learned that the hard way.
 
 Early in development, tokens were split across three files:
 - `tokens.css` — design token definitions
@@ -127,7 +127,7 @@ A synchronous script in `index.html` reads `localStorage` before React mounts:
 })();
 ```
 
-This prevents the white-flash-on-dark-theme problem that plagues most React apps.
+That stops the white flash on the dark theme that a lot of React apps have.
 
 ### Transition
 
@@ -145,31 +145,31 @@ html, body, .nav, .surface, .project-card, .xp-card, .terminal, .footer {
 
 ## WCAG contrast audit
 
-Every text/background pair has been verified against WCAG AA (4.5:1 for normal text, 3:1 for large text):
+Every text/background pair is checked against WCAG AA (4.5:1 for normal text, 3:1 for large text):
 
 ### Dark theme (on `#111113`)
 
 | Color | Hex | Contrast ratio | Pass? |
 |---|---|---|---|
-| Text | `#f0eee8` | 15.2:1 | ✅ AAA |
-| Text muted | `#8a8a8f` | 5.2:1 | ✅ AA |
-| Mint | `#a8d8c8` | 12.4:1 | ✅ AAA |
-| Lavender | `#c4b5e8` | 10.3:1 | ✅ AAA |
-| Peach | `#f4b8a4` | 10.8:1 | ✅ AAA |
-| Sky | `#9ec8e8` | 11.2:1 | ✅ AAA |
+| Text | `#f0eee8` | 15.2:1 | Pass (AAA) |
+| Text muted | `#8a8a8f` | 5.2:1 | Pass (AA) |
+| Mint | `#a8d8c8` | 12.4:1 | Pass (AAA) |
+| Lavender | `#c4b5e8` | 10.3:1 | Pass (AAA) |
+| Peach | `#f4b8a4` | 10.8:1 | Pass (AAA) |
+| Sky | `#9ec8e8` | 11.2:1 | Pass (AAA) |
 
 ### Light theme (on `#faf7f0`)
 
 | Color | Hex | Contrast ratio | Pass? |
 |---|---|---|---|
-| Text | `#18161e` | 16.1:1 | ✅ AAA |
-| Text muted | `#5e5b66` | 5.8:1 | ✅ AA |
-| Mint | `#1f7a5e` | 5.5:1 | ✅ AA |
-| Lavender | `#5a44a8` | 6.2:1 | ✅ AA |
-| Peach | `#b3553a` | 4.8:1 | ✅ AA |
-| Sky | `#2a6a98` | 5.1:1 | ✅ AA |
+| Text | `#18161e` | 16.1:1 | Pass (AAA) |
+| Text muted | `#5e5b66` | 5.8:1 | Pass (AA) |
+| Mint | `#1f7a5e` | 5.5:1 | Pass (AA) |
+| Lavender | `#5a44a8` | 6.2:1 | Pass (AA) |
+| Peach | `#b3553a` | 4.8:1 | Pass (AA) |
+| Sky | `#2a6a98` | 5.1:1 | Pass (AA) |
 
-No guessing. No "it looks fine to me." Every pair is documented and verified.
+Every pair is measured and written down. None of it is judged by eye.
 
 ---
 

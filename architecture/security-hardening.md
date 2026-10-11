@@ -30,7 +30,7 @@ With `rehype-raw` enabled, an attacker could inject:
 <img src=x onerror=alert(document.cookie)>
 ```
 
-into a README, and it would execute as JavaScript on my domain. That gives them access to `localStorage` (theme, terminal history), the ability to create phishing overlays, session state manipulation — everything.
+into a README, and it would execute as JavaScript on my domain. That would give them `localStorage` (theme, terminal history), the ability to put up phishing overlays, and control over session state.
 
 ### The fix
 
@@ -65,7 +65,7 @@ This is **defense-in-depth**. If the data files are ever compromised — through
 
 ## Content Security Policy
 
-The production CSP is served via `vercel.json` response headers and additionally enforced during development via a custom Vite plugin:
+The production CSP is served as response headers by Cloudflare Pages (generated from one config module at build time) and additionally enforced during development via a custom Vite plugin:
 
 ```
 default-src 'self';
@@ -87,7 +87,7 @@ connect-src 'self' data: https://raw.githubusercontent.com https://api.github.co
 
 ### Dev-time enforcement
 
-Most sites only add CSP in production. This site enforces it during development too, via a custom Vite server middleware:
+Most sites only add CSP in production. Here it's enforced during development too, through a custom Vite server middleware:
 
 ```typescript
 {
@@ -104,7 +104,7 @@ Most sites only add CSP in production. This site enforces it during development 
 }
 ```
 
-This catches CSP violations during development, not after deployment. If a new feature violates the policy, I know immediately.
+CSP violations show up while I'm developing, not after deployment. If a new feature breaks the policy, I find out straight away.
 
 ---
 
@@ -121,7 +121,7 @@ This catches CSP violations during development, not after deployment. If a new f
 
 ## API hardening
 
-The `whoami` and `scan` terminal commands fetch from `ipapi.co`. Both use `AbortController` with a 5-second timeout:
+The `whoami` and `scan` terminal commands fetch from `ipapi.co`. They ask for consent first and only make the request when run with `--yes`. Both use `AbortController` with a 5-second timeout:
 
 ```typescript
 const controller = new AbortController();
@@ -139,7 +139,7 @@ try {
 }
 ```
 
-If the API is down, slow, or MITMed, the terminal shows a graceful error message instead of hanging forever.
+If the API is down, slow, or MITMed, the terminal shows an error message instead of hanging forever.
 
 ### Session caching
 
@@ -151,7 +151,7 @@ if (cached) return JSON.parse(cached);
 // ... fetch, then sessionStorage.setItem('whoami_cache', JSON.stringify(data))
 ```
 
-This reduces unnecessary API calls and provides instant responses on repeat invocations.
+That saves API calls and makes repeat runs instant.
 
 ---
 

@@ -1,12 +1,12 @@
 # Terminal Emulator
 
-> Deep-dive into the command pipeline, type system, tab completion, history persistence, and SPA navigation.
+> The command pipeline, type system, tab completion, history persistence and SPA navigation.
 
 ---
 
 ## What it is
 
-A structured command interpreter — not a styled `<textarea>`. It has a typed command pipeline, 22 commands, tab completion with argument awareness, persistent history, SPA navigation, async support, and man pages.
+A structured command interpreter, not a styled `<textarea>`. It has a typed command pipeline, 26 commands, tab completion with argument awareness, typo suggestions, persistent history, SPA navigation, async support, and man pages.
 
 ---
 
@@ -21,6 +21,7 @@ A structured command interpreter — not a styled `<textarea>`. It has a typed c
 | `TerminalLine.tsx` | Line renderer — maps `TerminalLineType` to color tokens. |
 | `useTerminal.ts` | State hook — owns lines, history, submission pipeline. |
 | `commands/index.ts` | Command registry, alias resolution, `processCommand`. |
+| `commands/suggest.ts` | Closest-match search behind the "did you mean" hint. |
 
 ---
 
@@ -40,6 +41,7 @@ interface TerminalBlock {
   text: string;
   color?: 'mint' | 'lavender' | 'peach' | 'sky' | 'dim' | 'default';
   bold?: boolean;
+  run?: string;                          // if set, clicking the text runs this command
 }
 ```
 
@@ -54,7 +56,7 @@ type ProcessResult =
   | Promise<TerminalLine[]>  // async output (API calls)
 ```
 
-A flat primitive union. The template literal `NAVIGATE:${string}` is the key decision.
+The result is a flat union, and the template literal `NAVIGATE:${string}` is the decision that matters.
 
 #### Why `NAVIGATE:${string}` instead of `{ type: 'navigate', to: string }`?
 
@@ -78,25 +80,39 @@ if (typeof result === 'string' && result.startsWith('NAVIGATE:')) {
 Input → trim → split → resolve aliases → registry lookup → handler(args) → ProcessResult
 ```
 
-1. **Alias resolution** — `cls` → `clear`, `certs` → `cert`, `work` → `internship`, `?` → `help`
+1. **Alias resolution** — `cls` → `clear`, `certs` → `cert`, `work` → `internship`, `hire` → `tldr`, `experience` → `exp`, `posts` → `blog`, `?` → `help`
 2. **Special cases** — `exit`/`quit` return `'EXIT'`. `man <cmd>` invokes `showManPage()`.
-3. **Not found** — fuzzy suggestion via prefix match: "did you mean: ..." in mint
+3. **Not found** — typo suggestions: the closest command names appear as "did you mean: ...", and each one is clickable
 4. **Async handling** — Promise results show `querying...` loading line, replaced when resolved
 
 ---
 
-## All 22 commands
+### Clickable output
+
+A text block can carry a `run` string. Clicking it submits that command as if it had been typed, so project titles, suggestions and follow-up hints in the output are links into the terminal itself.
+
+### Consent before network calls
+
+`whoami` and `scan` look up the visitor's public IP through a third-party service. By default they do nothing except print what they would do. Running them again with `--yes` (the hint is clickable) goes ahead.
+
+---
+
+## All 26 commands
 
 | Command | Description | Type |
 |---|---|---|
 | `help` | Available commands | sync |
+| `tldr` | The 20-second version: status, top projects, contact. Alias `hire` | sync |
+| `exp` | Experience timeline. Alias `experience` | sync |
+| `blog` | List or open blog posts. Alias `posts` | sync/navigate |
+| `theme` | Switch light, dark or system theme | sync |
 | `about` | Who I am | sync |
-| `projects` | List projects, `--open <id>`, `--details <id>` | sync/navigate |
+| `projects` | List projects. `--details <id>` prints a breakdown, `--open <id>` opens the on-site page, `--repo <id>` opens GitHub | sync/navigate |
 | `skills` | Tech skills grid | sync |
 | `contact` | Contact info | sync |
 | `internship` | Current internship | sync |
-| `whoami` | IP, location, ISP via ipapi.co | **async** |
-| `scan` | Simulated Nmap port scan | **async** |
+| `whoami` | IP, location, ISP via ipapi.co, after `--yes` | **async** |
+| `scan` | Simulated port scan of your own IP, after `--yes` | **async** |
 | `ping` | Simulated ping | **async** |
 | `open` | Open social profile | sync |
 | `ls` | List filesystem | sync |
@@ -121,8 +137,8 @@ Context-aware. `getArgCompletions(cmd, priorArgs)` returns different lists per c
 
 ```typescript
 case 'open':      → ['github', 'linkedin', 'email']
-case 'projects':  → ['--open', '--details'] → then project IDs
-case 'help':      → all 22 command names
+case 'projects':  → ['--open', '--details', '--repo'] → then project IDs
+case 'help':      → all command names
 case 'cat':       → ['about.txt', 'skills.txt', 'README.md', 'resume.pdf', ...]
 case 'ls':        → ['-la', '-l', '-a']
 ```

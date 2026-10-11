@@ -34,13 +34,13 @@ graph LR
 
 ### Core principles
 
-1. **Single stylesheet.** `index.css` is the only CSS file imported by the application. It contains all design tokens, all component styles, all animations. `tokens.css` and `styles.css` exist as documentation artifacts — they are never imported. This was a hard-won lesson (see [Design Tokens](design-tokens.md) for the full story).
+1. **Single stylesheet.** `index.css` is the only CSS file imported by the application. It contains all design tokens, all component styles, all animations. `tokens.css` and `styles.css` exist as documentation artifacts — they are never imported. I learned that the hard way (the story is in [Design Tokens](design-tokens.md)).
 
 2. **Data-driven content.** All user-facing content lives in `data/`. Profile, projects, experience, skills, certifications, social links — every piece of text the site displays comes from a typed TypeScript file. Components never contain hardcoded content (with one exception: the Contact section's `ROWS` array).
 
-3. **Zero runtime dependencies for styling.** No Tailwind, no Sass, no CSS-in-JS. Styling is done with CSS custom properties (design tokens), native CSS nesting, `clamp()`, and `color-mix()`. The argument for preprocessors has essentially vanished.
+3. **No runtime dependencies for styling.** No Tailwind, no Sass, no CSS-in-JS. Styling is CSS custom properties (design tokens), native nesting, `clamp()` and `color-mix()`, which cover most of what preprocessors used to be needed for.
 
-4. **Terminal as first-class citizen.** The terminal overlay isn't a novelty feature — it's a complete navigation system with its own state management, command pipeline, and I/O rendering. It can do everything the web view can do, plus more (network tools, man pages, filesystem simulation).
+4. **Terminal as first-class citizen.** The terminal overlay isn't a gimmick. It's a full navigation system with its own state management, command pipeline and output rendering, and it can do everything the web view can, plus network tools, man pages and a simulated filesystem.
 
 ---
 
@@ -61,31 +61,30 @@ graph LR
 │   ├── sections/           — Hero, Projects, Experience, Skills, About, Contact
 │   ├── features/           — Blog, Resume, DesignSystem, NotFound, ProjectDetail
 │   ├── terminal/           — TerminalMode, Input, Output, Line, commands/, types/
-│   └── ui/                 — ProofStrip, CustomCursor
+│   ├── motion/             — Detail layer: scroll hairline, hover-only card details
+│   └── ui/                 — ProofStrip, CustomCursor, BackToTop
 │
 ├── Data layer
-│   ├── data/               — Content (profile, projects, experience, skills, certs, socials, posts, ctf)
+│   ├── data/               — Content (profile, projects, experience, skills, certs, socials, posts)
 │   └── config/             — Feature flags, metadata, site constants
 │
 ├── Service layer
-│   └── services/github.ts  — GitHub REST API (README fetch, repo metadata)
+│   ├── services/github.ts  — GitHub REST API (README fetch, repo metadata)
+│   └── services/visitor.ts — IP lookup for whoami/scan (consent first)
 │
 ├── Hook layer
 │   ├── hooks/useTheme.ts   — Dark/light/system with localStorage persistence
 │   └── hooks/useReveal.ts  — IntersectionObserver scroll-reveal
 │
-├── Animation layer
-│   └── animations/         — Framer Motion variants (25+ presets), easing curves
-│
 └── Static layer
-    └── public/             — favicon.svg, logo-mark.svg, robots.txt, sitemap.xml, vercel.json
+    └── public/             — favicon.svg, logo-mark.svg, robots.txt, og/
 ```
 
 ---
 
 ## Routing
 
-The app uses `BrowserRouter` from React Router 6.28. All routes are defined in `App.tsx`:
+The app uses `BrowserRouter` from React Router, with clean URLs (no `#`). Cloudflare Pages serves the app shell for unknown paths (its single-page-app fallback, since there is no top-level 404 page), so deep links and refreshes work. At build time each project, post and main page also gets its own copy of the HTML shell with that page's title, description and preview image, so shared links unfurl correctly. All routes are defined in `App.tsx`:
 
 | Path | Component | Loading |
 |---|---|---|
@@ -99,12 +98,16 @@ The app uses `BrowserRouter` from React Router 6.28. All routes are defined in `
 
 The homepage is the only eagerly-loaded route. Every other route is wrapped in `React.lazy()` + `Suspense` with a minimal loading indicator (a terminal-style `~$ loading...` prompt).
 
+### Project pages
+
+Each entry in `data/projects.ts` gets a page at `/project/:id`. Entries with `listed: false` (ICCF Portal, Hitech Infovision) stay out of the Selected work grid. They are reached by clicking the experience card that carries their `projectId`. A project page opens with a short problem / built / outcome / role summary from the data file, followed by the README fetched from GitHub.
+
 ### Navigation modes
 
 Navigation can happen through three mechanisms:
 
 1. **Standard links** — React Router `<Link>` components and `<a>` tags
-2. **Terminal commands** — `design`, `cat resume.pdf`, `projects --details <id>` all trigger SPA navigation via the `NAVIGATE:${string}` return type
+2. **Terminal commands** — `design`, `cat resume.pdf`, `projects --open <id>` all trigger SPA navigation via the `NAVIGATE:${string}` return type
 3. **Navbar adaptation** — The navbar renders different link sets depending on the current route (home sections vs. back-arrow for sub-pages vs. 10 anchor links for the design system)
 
 ---
@@ -129,7 +132,7 @@ const [{ pdf }, { ResumePDFDoc }] = await Promise.all([
 ]);
 ```
 
-This keeps the initial bundle lean. The PDF engine loads in ~1-2 seconds on demand.
+That keeps the initial bundle small. The PDF engine takes about 1-2 seconds to load on demand.
 
 ---
 
@@ -211,6 +214,6 @@ Content flows in one direction: from `data/*.ts` files into components. There's 
 
 External API calls are limited to two services:
 - **GitHub REST API** — Fetches README.md and repository metadata for the project detail page
-- **ipapi.co** — Fetches visitor IP/geolocation for the `whoami` terminal command
+- **ipapi.co** — Fetches visitor IP/geolocation for the `whoami` and `scan` terminal commands, only after the visitor agrees with `--yes`
 
-Both use `AbortController` with timeouts. Neither stores credentials. Rate limits are handled gracefully (GitHub's unauthenticated limit is 60 req/hour; the site caches responses in `sessionStorage`).
+Both use `AbortController` with timeouts. Neither stores credentials. Rate limits are handled (GitHub's unauthenticated limit is 60 req/hour; the site caches responses in `sessionStorage`).

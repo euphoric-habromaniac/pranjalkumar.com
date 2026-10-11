@@ -6,7 +6,7 @@
 
 ## The problem
 
-Most portfolios host a static PDF on S3 or Google Drive. The problem: your resume and your website drift apart. You update a job title on the site but forget to re-export the PDF. Now your website says one thing and your downloadable resume says another.
+Most portfolios host a static PDF on S3 or Google Drive, and the PDF and the website drift apart. You update a job title on the site, forget to re-export the PDF, and now the two say different things.
 
 ---
 
@@ -21,7 +21,7 @@ When you click "Download PDF," the site:
 3. **Renders a styled PDF** in memory
 4. **Triggers a browser download**
 
-The resume and the website are **always in sync**. Update a job title in `data/experience.ts`, and both the web view and the downloadable PDF reflect it immediately.
+The resume and the website are **always in sync**. Change a job title in `data/experience.ts` and both the web view and the PDF pick it up.
 
 ---
 
@@ -141,7 +141,7 @@ Experience bullet points contain HTML (`<b>`, `&amp;`). Every `dangerouslySetInn
 <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(b) }} />
 ```
 
-This is defense-in-depth. The data is controlled by me, but if the files are ever compromised, at least the blast radius is limited.
+This is defense-in-depth. I control the data, but if the files are ever compromised, the damage stays small.
 
 ---
 
@@ -150,7 +150,7 @@ This is defense-in-depth. The data is controlled by me, but if the files are eve
 `ResumePDF.tsx` uses `@react-pdf/renderer`'s `StyleSheet.create()` for PDF-specific styling. The PDF replicates the web resume's visual language but adapted for print:
 
 - Cormorant Garamond for headings (registered as a custom font)
-- Clean single-column layout optimized for A4
+- Single-column layout for A4
 - Section numbering matching the web view
 - Tech stack tags rendered as bordered pills
 - Consistent spacing via a 4px-based scale

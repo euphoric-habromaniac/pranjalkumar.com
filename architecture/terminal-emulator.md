@@ -6,7 +6,7 @@
 
 ## What it is
 
-A structured command interpreter — not a styled `<textarea>`. It has a typed command pipeline, 23 commands, tab completion with argument awareness, persistent history, SPA navigation, async support, and man pages.
+A structured command interpreter — not a styled `<textarea>`. It has a typed command pipeline, 22 commands, tab completion with argument awareness, persistent history, SPA navigation, async support, and man pages.
 
 ---
 
@@ -85,7 +85,7 @@ Input → trim → split → resolve aliases → registry lookup → handler(arg
 
 ---
 
-## All 23 commands
+## All 22 commands
 
 | Command | Description | Type |
 |---|---|---|
@@ -110,8 +110,8 @@ Input → trim → split → resolve aliases → registry lookup → handler(arg
 | `neofetch` | ASCII system info | sync |
 | `clear` | Clear terminal | sync |
 | `design` | Navigate to /design | navigate |
-| `ctf` | CTF writeups | sync |
-| `exit`/`quit` | Close terminal | exit |
+| `resume` | Open the résumé page | navigate |
+| `exit`/`quit` | Close terminal (handled outside the registry, not counted above) | exit |
 
 ---
 
@@ -122,7 +122,7 @@ Context-aware. `getArgCompletions(cmd, priorArgs)` returns different lists per c
 ```typescript
 case 'open':      → ['github', 'linkedin', 'email']
 case 'projects':  → ['--open', '--details'] → then project IDs
-case 'help':      → all 23 command names
+case 'help':      → all 22 command names
 case 'cat':       → ['about.txt', 'skills.txt', 'README.md', 'resume.pdf', ...]
 case 'ls':        → ['-la', '-l', '-a']
 ```

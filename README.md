@@ -19,6 +19,11 @@
 
 ---
 
+
+<p align="center">
+  <img src="assets/screenshot-home.png" alt="pranjalkumar.com home page" width="720" />
+</p>
+
 ## What is this?
 
 A personal portfolio website that doubles as a systems-engineering project. Not a template. Not a theme. Every pixel, every component, every interaction built from raw HTML, CSS, and TypeScript.
@@ -26,7 +31,7 @@ A personal portfolio website that doubles as a systems-engineering project. Not 
 The site serves two modes of interaction:
 
 1. **Standard Web** — Scroll-based portfolio with project cards, experience timeline, skills, about, and contact sections. Dark/light themed. Fully responsive.
-2. **Terminal Mode** — A full-screen CLI overlay with 23 commands, tab completion, command history, SPA navigation, and simulated network tools. Keyboard-driven. Persistent across sessions.
+2. **Terminal Mode** — A full-screen CLI overlay with 22 commands, tab completion, command history, SPA navigation, and simulated network tools. Keyboard-driven. Persistent across sessions.
 
 > **This repository is the public-facing documentation of the project.** The source code is private. What you'll find here is the *how* and *why* — architecture deep-dives, the design token system, the animation library, security hardening decisions, and the full blog post documenting the build process.
 
@@ -52,7 +57,7 @@ graph TB
 
     subgraph Terminal
         APP --> TM[TerminalMode]
-        TM --> CMD[Command Registry — 23 handlers]
+        TM --> CMD[Command Registry — 22 handlers]
         TM --> HOOK[useTerminal — state + history]
         CMD --> PROC[processCommand — pipeline]
     end
@@ -156,7 +161,7 @@ The full design system is live at [`/design`](https://pranjalkumar.com/design) a
 
 Not a styled `<textarea>`. A structured command interpreter with:
 
-- **23 commands** — `help`, `about`, `projects`, `skills`, `whoami`, `scan`, `ping`, `ls`, `cat`, `neofetch`, `sudo`, `design`, and more
+- **22 commands** — `help`, `about`, `projects`, `skills`, `whoami`, `scan`, `ping`, `ls`, `cat`, `neofetch`, `sudo`, `design`, and more
 - **Tab completion** with argument-context awareness (e.g., `projects --details <Tab>` cycles through project IDs)
 - **Command history** persisted to `localStorage`, navigable with arrow keys
 - **SPA navigation** via the `NAVIGATE:${string}` template literal type
